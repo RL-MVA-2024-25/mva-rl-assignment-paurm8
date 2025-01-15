@@ -4,8 +4,20 @@ from pathlib import Path
 import numpy as np
 import torch
 
-from evaluate import evaluate_HIV, evaluate_HIV_population
+from functools import partial
+from gymnasium.wrappers import TimeLimit
+from fast_env import FastHIVPatient
+from evaluate import evaluate_agent
 from train import ProjectAgent  # Replace DummyAgent with your agent implementation
+
+evaluate_HIV = partial(
+    evaluate_agent, env=TimeLimit(FastHIVPatient(), max_episode_steps=200)
+)
+
+evaluate_HIV_population = partial(
+    evaluate_agent,
+    env=TimeLimit(FastHIVPatient(domain_randomization=True), max_episode_steps=200),
+)
 
 
 def seed_everything(seed: int = 42):
@@ -31,4 +43,3 @@ if __name__ == "__main__":
         score_agent_dr: float = evaluate_HIV_population(agent=agent, nb_episode=20)
         with open(file="score.txt", mode="w") as f:
             f.write(f"{score_agent}\n{score_agent_dr}")
-            

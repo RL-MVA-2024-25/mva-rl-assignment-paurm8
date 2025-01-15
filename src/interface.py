@@ -42,7 +42,6 @@ class Agent(Protocol):
 
         Args:
             path (str): The file path where the agent's state should be saved.
-
         """
         pass
 
